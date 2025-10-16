@@ -119,7 +119,7 @@ def df_to_pdf_table(df, title="FLASH"):
 
     tz = pytz.timezone('Africa/Cairo')
     today = datetime.datetime.now(tz).strftime("%Y-%m-%d")
-    title_text = f"{today} | MINI MARKET🛒🛒"
+    title_text = f"{today} | MINI MARKET"
 
     elements = [
         Paragraph(fix_arabic(title_text), styleTitle),
@@ -213,3 +213,4 @@ if uploaded_files:
             file_name=file_name,
             mime="application/pdf"
         )
+
