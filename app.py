@@ -119,7 +119,7 @@ def df_to_pdf_table(df, title="FLASH"):
 
     tz = pytz.timezone('Africa/Cairo')
     today = datetime.datetime.now(tz).strftime("%Y-%m-%d")
-    title_text = f"{today} | {title} | MINI MARKET🛒🛒  "
+    title_text = f"{today} | MINI MARKET🛒🛒"
 
     elements = [
         Paragraph(fix_arabic(title_text), styleTitle),
@@ -128,7 +128,7 @@ def df_to_pdf_table(df, title="FLASH"):
 
     table = Table(data, colWidths=col_widths[:len(df.columns)], repeatRows=1)
     table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#FFF9C4")),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#FFF9C4")),  # لون العنوان
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.black),
         ('GRID', (0, 0), (-1, -1), 0.25, colors.black),
         ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
@@ -151,6 +151,7 @@ uploaded_files = st.file_uploader(
 )
 
 if uploaded_files:
+    # تسجيل الخطوط العربية Cairo
     pdfmetrics.registerFont(TTFont('Arabic', 'Cairo-Regular.ttf'))
     pdfmetrics.registerFont(TTFont('Arabic-Bold', 'Cairo-Bold.ttf'))
 
