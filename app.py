@@ -101,13 +101,12 @@ def df_to_pdf_table(df, title="FLASH"):
                 else ("" if pd.isna(x) else str(x))
             )
 
-    styleN = ParagraphStyle(name='Normal', fontName='Arabic-Bold', fontSize=9,
-                            alignment=1, wordWrap='RTL')
-    styleBH = ParagraphStyle(name='Header', fontName='Arabic-Bold', fontSize=10,
-                             alignment=1, wordWrap='RTL')
-    styleTitle = ParagraphStyle(name='Title', fontName='Arabic-Bold', fontSize=14,
-                                alignment=1, wordWrap='RTL')
+    # إعداد الأنماط
+    styleN = ParagraphStyle(name='Normal', fontName='Arabic-Bold', fontSize=9, alignment=1)
+    styleBH = ParagraphStyle(name='Header', fontName='Arabic-Bold', fontSize=10, alignment=1)
+    styleTitle = ParagraphStyle(name='Title', fontName='Arabic-Bold', fontSize=14, alignment=1)
 
+    # بناء الجدول
     data = []
     data.append([Paragraph(fix_arabic(col), styleBH) for col in df.columns])
     for _, row in df.iterrows():
@@ -119,7 +118,7 @@ def df_to_pdf_table(df, title="FLASH"):
 
     tz = pytz.timezone('Africa/Cairo')
     today = datetime.datetime.now(tz).strftime("%Y-%m-%d")
-    title_text = f"{today} | MINI MARKET"
+    title_text = f"{today} | {fix_arabic(title)} | MINI MARKET🛒"
 
     elements = [
         Paragraph(fix_arabic(title_text), styleTitle),
@@ -151,7 +150,6 @@ uploaded_files = st.file_uploader(
 )
 
 if uploaded_files:
-    # تسجيل الخطوط العربية Cairo
     pdfmetrics.registerFont(TTFont('Arabic', 'Cairo-Regular.ttf'))
     pdfmetrics.registerFont(TTFont('Arabic-Bold', 'Cairo-Bold.ttf'))
 
@@ -182,12 +180,6 @@ if uploaded_files:
                 merged_df.loc[mask, 'المدينة'] = city_ffill.loc[mask]
 
         merged_df['المنطقة'] = merged_df['المدينة'].apply(classify_city)
-        merged_df['المنطقة'] = pd.Categorical(
-            merged_df['المنطقة'],
-            categories=[c for c in merged_df['المنطقة'].unique() if c != "Other City"] + ["Other City"],
-            ordered=True
-        )
-
         merged_df = merged_df.sort_values(['المنطقة','كود الاوردر'])
 
         buffer = io.BytesIO()
@@ -206,11 +198,10 @@ if uploaded_files:
         today = datetime.datetime.now(tz).strftime("%Y-%m-%d")
         file_name = f"سواقين ميني ماركت- {today}.pdf"
 
-        st.success("✅تم تجهيز ملف PDF ✅")
+        st.success("✅ تم تجهيز ملف PDF ✅")
         st.download_button(
-            label="⬇️⬇️ تحميل ملف PDF",
+            label="⬇️ تحميل ملف PDF",
             data=buffer.getvalue(),
             file_name=file_name,
             mime="application/pdf"
         )
-
